@@ -224,6 +224,7 @@ int main(){
     Enemy_Roster -> append(enemy3);
     //initialize control variable
     string active_player_selector;
+    string usingAbility;
     active_player_selector = "Rogue";
     Fighter* active_player;
     Fighter* active_enemy;
@@ -231,19 +232,33 @@ int main(){
         // collect and validate input
         cout << "Choose your active player, Rogue, Sorcerer, Knight" << endl;
         cin >> active_player_selector;
-        //enemy is always the head of the enemy roster
-        active_enemy = Enemy_Roster->head->unit;
         //Uses name string to find and select the current unit on the fighter roster
         active_player = Fighter_Roster->selectFighter(active_player_selector);
         if(active_player == nullptr){
             cout << "Invalid input! Select an active player on your Roster." << endl;
             continue;
         }
+        cout << "Your chosen gladiator" << endl;
+        active_player->display();
+
+        cout << endl << "Would you like to use your ability before the fight? Yes?" << endl;
+        cin >> usingAbility;
+        if(usingAbility == "Yes"){
+            if(active_player->abilityRemaining > 0){
+            active_player->useAbility();
+            cout << endl << "Your chosen gladiator grows stronger" << endl;
+            active_player->display();
+            }
+            else{
+                cout << "You cannot you are drained of power..." << endl;
+            }
+        }
+
+        //enemy is always the head of the enemy roster
+        active_enemy = Enemy_Roster->head->unit;
         // display current fight
         cout << endl << "The current enemy" << endl;
         active_enemy->display();
-        cout << endl << "Your selected gladiator" << endl;
-        active_player->display();
 
         active_enemy->health -= active_player -> attack;
         active_player->health -= active_enemy -> attack;
@@ -258,10 +273,14 @@ int main(){
         }
         if(Fighter_Roster->head == nullptr){
             cout << "Your team has been eliminated! Game Over..." << endl;
+            cout << "The enemies remain: " << endl;
+            Enemy_Roster->displayStats();
             break;
         }
         if(Enemy_Roster->head == nullptr){
             cout << "The enemies have been eliminated! You Win!" << endl;
+            cout << "The victors that remain: " << endl;
+            Fighter_Roster->displayStats();
             break;
         }    
     }
