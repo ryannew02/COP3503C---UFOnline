@@ -198,6 +198,7 @@ class LinkedList {
         while(current != nullptr) {
             FighterNode<T>* temp = current;
             current = temp -> next;
+            delete temp -> unit;
             delete temp;
         }        
     }
@@ -267,9 +268,11 @@ int main(){
         cout << active_player -> name << " does " << active_player->attack << " damage to " << active_enemy->name << endl << active_enemy->name << " has " << active_enemy->health << " remaining" << endl;
         if(active_enemy->health < 1){
             Enemy_Roster->deleteFighter(active_enemy);
+            active_enemy = nullptr;
         }
         if(active_player->health < 1){
             Fighter_Roster->deleteFighter(active_player);
+            active_player = nullptr;
         }
         if(Fighter_Roster->head == nullptr){
             cout << "Your team has been eliminated! Game Over..." << endl;
