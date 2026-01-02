@@ -3,6 +3,75 @@
 #include <fstream>
 using namespace std;
 
+class Fighter{
+    public:
+    string name;
+    int health;
+    int attack;
+    int critical;
+    int abilityRemaining;
+
+    Fighter(string n, int h, int a, int c){
+        name = n;
+        health = h;
+        attack = a;
+        critical = c;
+        abilityRemaining = 1;
+    }
+
+    void displayStats(){
+        cout << "Name: " << name << endl;
+        cout << "Health: " << health << endl;
+        cout << "Attack: " << attack << endl;
+        cout << "Critical: " << critical << endl;
+        cout << name << " ability uses remaining: " << abilityRemaining << endl;
+    }
+
+    virtual ~Fighter(){
+
+    }
+
+    virtual void useAbility() = 0;
+};
+
+class Rogue : public Fighter{
+    public:
+
+    Rogue(string n, int h, int a, int c) : Fighter(n, h, a, c) {
+        critical *= 2;
+    }
+
+    void useAbility(){
+        critical *= 2;
+        attack *= 2;
+    }
+};
+
+class Mage : public Fighter{
+    public:
+
+    Mage(string n, int h, int a, int c) : Fighter(n, h, a, c) {
+        attack *= 2;
+    }
+
+    void useAbility(){
+        attack *= 3;
+    }
+};
+
+class Knight : public Fighter{
+    public:
+
+    Knight(string n, int h, int a, int c) : Fighter(n, h, a, c) {
+        health *= 2;
+    }
+
+    void useAbility(){
+        health /= 2;
+        attack *= 2;
+    }
+};
+
 template <typename T>
 struct FighterNode {
     T unit;
@@ -79,7 +148,8 @@ class LinkedList {
             temp = temp -> next;
         }
     }
-    Fighter* selectFighter(string name) {
+    
+    T selectFighter(string name){
         FighterNode<T>* temp = head;
         while(temp != nullptr){
             if(name == temp->unit->name){
@@ -89,6 +159,61 @@ class LinkedList {
         }
         return nullptr;
     }
+    void loadRoster(string filename){
+        ifstream inputFile(filename);
+        if (!inputFile.is_open()){
+            cout << "Error: Could not load roster" << filename << endl;
+            return;
+        }
+        string name;
+        int h, a, c;
+        Fighter* newUnit;
+        while(inputFile >> name >> h >> a >> c){
+            newUnit = nullptr;
+            if(name == "Rogue"){
+                newUnit = new Rogue(name, h, a, c);
+                cout << name << " loaded successfully from file " << filename << endl;
+            }
+            else if(name == "Knight"){
+                newUnit = new Knight(name, h, a, c);
+                cout << name << " loaded successfully from file " << filename << endl;
+            }
+            else if(name == "Mage"){
+                newUnit = new Mage(name, h, a, c);
+                cout << name << " loaded successfully from file " << filename << endl;
+            }
+            if(newUnit != nullptr){
+                append(newUnit);
+            }
+        }
+        inputFile.close();
+        if(head != nullptr){
+        cout << "Roster loaded from " << filename << " successfully!" << endl;
+        return;
+        }
+        else{
+            cout << "No units exist in roster file " << filename << endl;
+            return;
+        }
+    }
+
+    void saveRoster(){
+        ofstream outputFile("thirdroster.txt");
+        FighterNode<T>* temp;
+        string name;
+        int h, a, c;
+        temp = head;
+        while(temp != nullptr){
+            name = temp->unit->name;
+            h = temp->unit->health;
+            a = temp->unit->attack;
+            c = temp->unit->critical;
+            outputFile << name << " " << h << " " << a << " " << c << endl;
+            temp = temp->next;
+        }
+        outputFile.close();
+    }
+
     ~LinkedList(){
         FighterNode<T>* current = head;
         while(current != nullptr) {
@@ -98,115 +223,13 @@ class LinkedList {
             delete temp;
         }        
     }
-
 };
-
-
-
-void loadRoster(string filename){
-  ifstream inputFile(filename);
-
-  if (!inputFile.is_open()){
-    cout << "Error: Could not open file " << filename << endl;
-    return;
-  }
-  string name;
-  int h, a, c;
-  Fighter* newUnit;
-  LinkedList<Fighter*>* fighterRoster;
-  fighterRoster = new LinkedList<Fighter*>();
-  while(inputFile >> name >> h >> a >> c){
-    newUnit = nullptr;
-    if(name == "Rogue"){
-        newUnit = new Rogue(name, h, a, c);
-    }
-    else if(name == "Knight"){
-        newUnit = new Knight(name, h, a, c);
-    }
-    else if(name == "Mage"){
-        newUnit = new Mage(name, h, a, c);
-    }
-    if(newUnit != nullptr){
-        fighterRoster->append(newUnit);
-    }
-  }
-  inputFile.close();
-  }
 
 int main(){
   string name;
   name = "secondroster.txt";
-  loadRoster(name);
+  LinkedList<Fighter*>* fighterRoster = new LinkedList<Fighter*>;
+  fighterRoster->loadRoster(name);
+  fighterRoster->saveRoster();
   return 0;
 }
-
-class Fighter{
-    public:
-    string name;
-    int health;
-    int attack;
-    int critical;
-    int abilityRemaining;
-
-    Fighter(string n, int h, int a, int c){
-        name = n;
-        health = h;
-        attack = a;
-        critical = c;
-        abilityRemaining = 1;
-    }
-
-    void displayStats(){
-        cout << "Name: " << name << endl;
-        cout << "Health: " << health << endl;
-        cout << "Attack: " << attack << endl;
-        cout << "Critical: " << critical << endl;
-        cout << name << " ability uses remaining: " << abilityRemaining << endl;
-    }
-
-    virtual ~Fighter(){
-
-    }
-
-    virtual void useAbility() = 0;
-};
-
-class Rogue : public Fighter{
-    public:
-
-    Rogue(string n, int h, int a, int c) : Fighter(n, h, a, c) {
-        critical *= 2;
-    }
-
-    void useAbility(){
-        critical *= 2;
-        attack *= 2;
-    }
-};
-
-class Mage : public Fighter{
-    public:
-
-    Mage(string n, int h, int a, int c) : Fighter(n, h, a, c) {
-        attack *= 2;
-    }
-
-    void useAbility(){
-        attack *= 3;
-    }
-};
-
-class Knight : public Fighter{
-    public:
-
-    Knight(string n, int h, int a, int c) : Fighter(n, h, a, c) {
-        health *= 2;
-    }
-
-    void useAbility(){
-        health /= 2;
-        attack *= 2;
-    }
-};
-
-
