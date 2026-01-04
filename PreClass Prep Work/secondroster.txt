@@ -1,3 +1,3 @@
-Rogue 10 10 10
-Mage 10 20 0
-Knight 30 10 0
+Rogue 10 10 40
+Mage 10 80 0
+Knight 120 10 0

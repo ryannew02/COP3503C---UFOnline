@@ -3,36 +3,7 @@
 #include <fstream>
 using namespace std;
 
-class Fighter{
-    public:
-    string name;
-    int health;
-    int attack;
-    int critical;
-    int abilityRemaining;
-
-    Fighter(string n, int h, int a, int c){
-        name = n;
-        health = h;
-        attack = a;
-        critical = c;
-        abilityRemaining = 1;
-    }
-
-    void displayStats(){
-        cout << "Name: " << name << endl;
-        cout << "Health: " << health << endl;
-        cout << "Attack: " << attack << endl;
-        cout << "Critical: " << critical << endl;
-        cout << name << " ability uses remaining: " << abilityRemaining << endl;
-    }
-
-    virtual ~Fighter(){
-
-    }
-
-    virtual void useAbility() = 0;
-};
+#include "Fighter.h"
 
 class Rogue : public Fighter{
     public:
@@ -197,8 +168,8 @@ class LinkedList {
         }
     }
 
-    void saveRoster(){
-        ofstream outputFile("thirdroster.txt");
+    void saveRoster(string filename){
+        ofstream outputFile(filename);
         FighterNode<T>* temp;
         string name;
         int h, a, c;
@@ -230,6 +201,6 @@ int main(){
   name = "secondroster.txt";
   LinkedList<Fighter*>* fighterRoster = new LinkedList<Fighter*>;
   fighterRoster->loadRoster(name);
-  fighterRoster->saveRoster();
+  fighterRoster->saveRoster(name);
   return 0;
 }
