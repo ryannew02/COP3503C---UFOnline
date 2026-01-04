@@ -76,10 +76,15 @@
         }
         return nullptr;
     }
-    void LinkedList::loadRoster(string filename){
-        ifstream inputFile(filename);
-        if (!inputFile.is_open()){
-            cout << "No save found...backing up from default template." << filename << endl;
+    void LinkedList::loadRoster(string fighterfilename, string enemyfilename){
+        string name;
+        int h, a, c;
+        Fighter* newUnit;
+
+        //Load ally roster...
+        ifstream fighterFile(fighterfilename);
+        if (!fighterFile.is_open()){
+            cout << "No save found...backing up from default template.   " << fighterfilename << endl;
             Fighter* newUnit;
             newUnit = new Rogue("Rogue", 10, 10, 10);
             append(newUnit);
@@ -87,12 +92,9 @@
             append(newUnit);
             newUnit = new Mage("Mage", 10, 10, 10);
             append(newUnit);
-            return;
         }
-        string name;
-        int h, a, c;
-        Fighter* newUnit;
-        while(inputFile >> name >> h >> a >> c){
+        else{
+            while(fighterFile >> name >> h >> a >> c){
             newUnit = nullptr;
             if(name == "Rogue"){
                 newUnit = new Rogue(name, h, a, c);
@@ -105,17 +107,42 @@
             }
             if(newUnit != nullptr){
                 append(newUnit);
-                cout << name << " loaded successfully from file " << filename << endl;
+                cout << name << " loaded successfully from file " << fighterfilename << endl;
             }
         }
-        inputFile.close();
+        fighterFile.close();
         if(head != nullptr){
-        cout << "Roster loaded from " << filename << " successfully!" << endl;
-        return;
+        cout << "Roster loaded from " << fighterfilename << " successfully!" << endl;
+        }
+        }
+
+        //Load enemy roster...
+        ifstream enemyFile(enemyfilename);
+        if (!enemyFile.is_open()){
+            cout << "No save found...backing up from default template." << enemyfilename << endl;
+            Fighter* newUnit;
+            newUnit = new Monster("Monster", 10, 10, 10);
+            append(newUnit);
+            newUnit = new Monster("Monster", 20, 20, 20);
+            append(newUnit);
+            newUnit = new Monster("Monster", 30, 30, 30);
+            append(newUnit);
         }
         else{
-            cout << "No units exist in roster file " << filename << endl;
-            return;
+            while(enemyFile >> name >> h >> a >> c){
+                newUnit = nullptr;
+                if(name == "Monster"){
+                    newUnit = new Rogue(name, h, a, c);
+                }
+                if(newUnit != nullptr){
+                    append(newUnit);
+                    cout << name << " loaded successfully from file " << enemyfilename << endl;
+                }
+            }
+            enemyFile.close();
+            if(head != nullptr){
+            cout << "Roster loaded from " << enemyfilename << " successfully!" << endl;
+            }
         }
     }
 

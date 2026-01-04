@@ -6,6 +6,7 @@
 #include "Rogue.h"
 #include "Mage.h"
 #include "Knight.h"
+#include "Monster.h"
 using namespace std;
 
 struct FighterNode {
@@ -25,7 +26,7 @@ class LinkedList {
     void deleteFighter(Fighter* unit);
     void displayStats();
     Fighter* selectFighter(string name);
-    void loadRoster(string filename);
+    void loadRoster(string fighterfilename, string enemyfilename);
     void saveRoster(string filename);
     ~LinkedList();
 
