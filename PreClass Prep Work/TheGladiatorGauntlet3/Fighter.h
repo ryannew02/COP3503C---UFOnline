@@ -8,7 +8,7 @@ class Fighter {
     string name;
     int health, attack, critical, abilityRemaining;
     Fighter(string n, int h, int a, int c);
-    void displayStats();
+    virtual void displayStats();
     virtual ~Fighter();
     virtual void useAbility() = 0;
 };

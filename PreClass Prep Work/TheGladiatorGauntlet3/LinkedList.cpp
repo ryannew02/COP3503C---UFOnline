@@ -5,9 +5,10 @@
         next = nullptr;
     }
 
-    LinkedList::LinkedList() {
+    LinkedList::LinkedList(bool affiliation) {
         head = nullptr;
         roster_size = 0;
+        is_ally = affiliation;
     }
 
     void LinkedList::append(Fighter* unit) {
@@ -57,11 +58,11 @@
     void LinkedList::displayStats() {
         FighterNode* temp = head;
         while(temp != nullptr){
-            cout << "Class: " << temp -> unit -> name << endl;
+            cout << endl << "Class: " << temp -> unit -> name << endl;
             cout << "Health: " << temp -> unit -> health << endl;
             cout << "Attack: " << temp -> unit -> attack << endl;
             cout << "Critical: " << temp -> unit -> critical << endl;
-            cout << "Ability uses Remaining: " << temp -> unit -> abilityRemaining << endl << endl;
+            cout << "Ability uses Remaining: " << temp -> unit -> abilityRemaining << endl;
             temp = temp -> next;
         }
     }
@@ -76,15 +77,15 @@
         }
         return nullptr;
     }
-    void LinkedList::loadRoster(string fighterfilename, string enemyfilename){
+    void LinkedList::loadRoster(string filename){
         string name;
         int h, a, c;
         Fighter* newUnit;
-
+        if(is_ally){
         //Load ally roster...
-        ifstream fighterFile(fighterfilename);
+        ifstream fighterFile(filename);
         if (!fighterFile.is_open()){
-            cout << "No save found...backing up from default template.   " << fighterfilename << endl;
+            cout << "No save found...backing up from default template " << filename << endl;
             Fighter* newUnit;
             newUnit = new Rogue("Rogue", 10, 10, 10);
             append(newUnit);
@@ -107,19 +108,20 @@
             }
             if(newUnit != nullptr){
                 append(newUnit);
-                cout << name << " loaded successfully from file " << fighterfilename << endl;
+                cout << name << " loaded successfully from file " << filename << endl;
             }
         }
         fighterFile.close();
         if(head != nullptr){
-        cout << "Roster loaded from " << fighterfilename << " successfully!" << endl;
+        cout << "Roster loaded from " << filename << " successfully!" << endl;
         }
         }
-
+        }
+        else{   
         //Load enemy roster...
-        ifstream enemyFile(enemyfilename);
+        ifstream enemyFile(filename);
         if (!enemyFile.is_open()){
-            cout << "No save found...backing up from default template." << enemyfilename << endl;
+            cout << "No save found...backing up from default template " << filename << endl;
             Fighter* newUnit;
             newUnit = new Monster("Monster", 10, 10, 10);
             append(newUnit);
@@ -136,13 +138,14 @@
                 }
                 if(newUnit != nullptr){
                     append(newUnit);
-                    cout << name << " loaded successfully from file " << enemyfilename << endl;
+                    cout << name << " loaded successfully from file " << filename << endl;
                 }
             }
             enemyFile.close();
             if(head != nullptr){
-            cout << "Roster loaded from " << enemyfilename << " successfully!" << endl;
+            cout << "Roster loaded from " << filename << " successfully!" << endl;
             }
+        }
         }
     }
 

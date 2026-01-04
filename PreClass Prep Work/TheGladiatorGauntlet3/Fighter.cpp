@@ -10,8 +10,8 @@ Fighter::Fighter(string n, int h, int a, int c) {
 
 void Fighter::displayStats() {
     cout <<"Name: " << name << endl;
-    cout << "Health Attack Critical" << endl;
-    cout << health << attack << critical << endl;
+    cout << "Health - Attack - Critical" << endl;
+    cout << health << " - " << attack << " - " << critical << endl;
     cout << "Ability uses remaining " << abilityRemaining << endl;
 }
 

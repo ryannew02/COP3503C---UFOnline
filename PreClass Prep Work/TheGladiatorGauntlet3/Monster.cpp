@@ -12,3 +12,8 @@
     void Monster::useAbility(){
         health = 0;
     }
+    void Monster::displayStats(){
+        cout <<"Name: " << name << endl;
+        cout << "Health - Attack - Critical" << endl;
+        cout << health << " - "<< attack << " - " << critical << endl;
+        }

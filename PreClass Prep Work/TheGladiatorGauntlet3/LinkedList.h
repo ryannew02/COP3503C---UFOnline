@@ -20,13 +20,14 @@ class LinkedList {
     public:
     FighterNode* head;
     int roster_size;
+    bool is_ally;
 
-    LinkedList();
+    LinkedList(bool affiliation);
     void append(Fighter* unit);
     void deleteFighter(Fighter* unit);
     void displayStats();
     Fighter* selectFighter(string name);
-    void loadRoster(string fighterfilename, string enemyfilename);
+    void loadRoster(string fighterfilename);
     void saveRoster(string filename);
     ~LinkedList();
 
