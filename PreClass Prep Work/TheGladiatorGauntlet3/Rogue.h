@@ -6,8 +6,6 @@ using namespace std;
 
 class Rogue : public Fighter{
     public:
-
     Rogue(string n, int h, int a, int c);
-
     void useAbility();
 };
