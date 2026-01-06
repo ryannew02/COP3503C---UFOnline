@@ -175,3 +175,38 @@
             delete temp;
         }        
     }
+
+    void LinkedList::loadRosterBinary(string filename){
+        ifstream inputFile(filename, ios::binary);
+
+        if(!inputFile.is_open()) {
+            cout << "Error opening binary file (or file doesn't exist)!" << endl;
+            return;
+        }
+
+        int nameLength;
+        int h, a, c;
+
+        while(inputFile.read((char*)&nameLength, sizeof(nameLength))) {
+            char* nameBuffer = new char[nameLength +1];
+            inputFile.read(nameBuffer, nameLength);
+            nameBuffer[nameLength] = '\0';
+            string name = nameBuffer;
+            delete[] nameBuffer;
+
+            inputFile.read((char*)&h, sizeof(int));
+            inputFile.read((char*)&a, sizeof(int));
+            inputFile.read((char*)&c, sizeof(int));
+
+        Fighter* newUnit = nullptr;
+        if(name == "Rogue") newUnit = new Rogue(name, h, a, c);
+        else if(name == "Knight") newUnit = new Knight(name, h, a, c);
+        else if(name == "Mage") newUnit = new Mage(name, h, a, c);
+
+        if (newUnit != nullptr) {
+            append(newUnit);
+            cout << "Loaded Binary: " << name << endl;
+        }
+    }
+    inputFile.close();
+    }

@@ -30,5 +30,6 @@ class LinkedList {
     void loadRoster(string fighterfilename);
     void saveRoster(string filename);
     ~LinkedList();
+    void loadRosterBinary(string filename);
 
 };
