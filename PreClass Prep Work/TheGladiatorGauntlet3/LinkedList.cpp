@@ -134,7 +134,7 @@
             while(enemyFile >> name >> h >> a >> c){
                 newUnit = nullptr;
                 if(name == "Monster"){
-                    newUnit = new Rogue(name, h, a, c);
+                    newUnit = new Monster(name, h, a, c);
                 }
                 if(newUnit != nullptr){
                     append(newUnit);
