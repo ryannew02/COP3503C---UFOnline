@@ -176,11 +176,47 @@
         }        
     }
 
+    void LinkedList::saveRosterBinary(string filename){
+    ofstream outputFile(filename, ios::binary);
+
+    if(!outputFile.is_open()){
+        cout << "Error: Could not create binary file " << filename << endl;
+        return;
+    }
+
+    FighterNode* temp = head;
+    while(temp != nullptr){
+        Fighter* f = temp->unit;
+        int nameLength = f->name.size();
+
+        outputFile.write((char*)&nameLength, sizeof(nameLength));
+
+        outputFile.write(f->name.c_str(), nameLength);
+
+        outputFile.write((char*)&f->health, sizeof(int));
+        outputFile.write((char*)&f->attack, sizeof(int));
+        outputFile.write((char*)&f->critical, sizeof(int));
+
+        temp = temp->next;
+    }
+    
+    outputFile.close();
+    cout << "Successfully saved binary roster to " << filename << endl;
+    }
+
     void LinkedList::loadRosterBinary(string filename){
+    if(is_ally){
         ifstream inputFile(filename, ios::binary);
 
         if(!inputFile.is_open()) {
-            cout << "Error opening binary file (or file doesn't exist)!" << endl;
+            cout << "No binary save found...backing up from default template " << filename << endl;
+            Fighter* newUnit;
+            newUnit = new Rogue("Rogue", 10, 10, 10);
+            append(newUnit);
+            newUnit = new Knight("Knight", 10, 10, 10);
+            append(newUnit);
+            newUnit = new Mage("Mage", 10, 10, 10);
+            append(newUnit);
             return;
         }
 
@@ -207,6 +243,44 @@
             append(newUnit);
             cout << "Loaded Binary: " << name << endl;
         }
+        }
+        inputFile.close();
     }
-    inputFile.close();
+    else{
+        ifstream inputFile(filename, ios::binary);
+        if(!inputFile.is_open()) {
+            cout << "No save found...backing up from default template " << filename << endl;
+            Fighter* newUnit;
+            newUnit = new Monster("Monster", 10, 10, 10);
+            append(newUnit);
+            newUnit = new Monster("Monster", 20, 20, 20);
+            append(newUnit);
+            newUnit = new Monster("Monster", 30, 30, 30);
+            append(newUnit);
+            return;
+        }
+
+        int nameLength;
+        int h, a, c;
+
+        while(inputFile.read((char*)&nameLength, sizeof(nameLength))) {
+            char* nameBuffer = new char[nameLength +1];
+            inputFile.read(nameBuffer, nameLength);
+            nameBuffer[nameLength] = '\0';
+            string name = nameBuffer;
+            delete[] nameBuffer;
+
+            inputFile.read((char*)&h, sizeof(int));
+            inputFile.read((char*)&a, sizeof(int));
+            inputFile.read((char*)&c, sizeof(int));
+
+        Fighter* newUnit = nullptr;
+        newUnit = new Monster(name, h, a, c);
+        if (newUnit != nullptr) {
+            append(newUnit);
+            cout << "Loaded Binary: " << name << endl;
+        }
+        }
+        inputFile.close();
+    }   
     }
