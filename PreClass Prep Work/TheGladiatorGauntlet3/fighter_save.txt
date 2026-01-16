@@ -1,3 +1,0 @@
-Rogue 10 10 10
-Knight 10 10 10
-Mage 10 10 10
